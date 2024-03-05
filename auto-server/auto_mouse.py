@@ -1,3 +1,5 @@
+# -*- coding: gb2312 -*-
+
 import win32gui
 import win32api
 import win32con
@@ -5,6 +7,11 @@ import window
 
 class Mouse(object):
     def MoveAndClick(self, pos: window.Pos, hWnd: int):
+        '''
+        入参: 
+            pos: 点击位置所处的系统屏幕坐标的x和y坐标，为Pos结构体
+            hWnd: 窗口句柄
+        '''
         # 点击的位置(屏幕坐标)
         (click_x, click_y) = (pos.x, pos.y)
         # 屏幕坐标转窗口内坐标

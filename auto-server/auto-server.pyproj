@@ -25,10 +25,9 @@
     <Compile Include="auto_mouse.py" />
     <Compile Include="auto_server.py" />
     <Compile Include="auto_WeChat.py" />
-    <Compile Include="globals.py" />
-    <Compile Include="ip_addr.py" />
-    <Compile Include="monitor.py" />
-    <Compile Include="wechat.py" />
+    <Compile Include="global_params.py" />
+    <Compile Include="auto_ip_addr.py" />
+    <Compile Include="monitors.py" />
     <Compile Include="window.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
