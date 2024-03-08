@@ -1,4 +1,6 @@
-﻿import win32api
+﻿# -*- coding: gb2312 -*-
+
+import win32api
 import win32con
 import win32gui
 import win32ui
@@ -31,32 +33,41 @@ class Window(object):
                 window_name: 窗口名，一般是窗口的名称，在打开的程序的窗口最上面一般会有名字
                 window_class_name: 窗口的类型名，可以在spy++中通过window_name将窗口搜索出来后查看
         '''
-        
+        # 通过传入的窗口类名(window_class_name)和窗口名(window_name)搜索窗口
         window_pos, self.hWnd = self.GetWindow(class_name=window_class_name, window_name=window_name)
+        # 将窗口名保存至结构体中
         self.window_name = window_name
+        # 将窗口类名保存至结构体中
         self.window_class_name = window_class_name
+        # window_left_top表示窗口的左上角，即x为窗口最左侧坐标，y为窗口最上面坐标
         self.window_left_top = Pos(window_pos[0], window_pos[1]) # 左上角
+        # window_right_bottom表示窗口的右下角，即x为窗口最右侧坐标，y为窗口最下面坐标
         self.window_right_bottom = Pos(window_pos[2], window_pos[3]) # 右下角
         pass # function __init__
     
-    #获取窗口坐标
     def GetWindow(class_name: str, window_name: str, print_hwnd: bool = False, print_text: bool = False) -> tuple[tuple[int, int, int, int], int]:
         '''
         /***************************************************************************************************/
-        *   返回窗口的文件句柄，窗口位置信息等。
+        *   GetWindow: 返回窗口的文件句柄，窗口位置信息等。
         *   
         *   输入:
         *       window_name: 窗口名，一般是窗口的名称，在打开的程序的窗口最上面一般会有名字
         *       class_name: 窗口的类型名，可以在spy++中通过window_name将窗口搜索出来后查看
+        *
+        *   输出:
+        *       window_pos: tuple[int, int, int, int]
+        *           window_pos返回窗口的屏幕坐标，分别为窗口的left, top, right, high
+        *       hWnd: int
+        *           hWnd返回窗口的句柄，用于对这个窗口进行操作，例如向窗口发送鼠标键盘操作
         /***************************************************************************************************/
         '''
         #hWnd是文件句柄，通过使用visual studio自带的spy++获得的。在工具栏中的 工具->spy++中
         # hWnd=win32gui.FindWindow('WeChatLoginWndForPC','微信')
         hWnd=win32gui.FindWindow('WeChatMainWndForPC','微信')
+        # 通过窗口句柄，获取窗口的坐标信息，该坐标为屏幕坐标，即窗口处在屏幕中的什么坐标
         window_pos = win32gui.GetWindowRect(hWnd)
         #返回句柄窗口的设备环境，覆盖整个窗口，包括非客户区，标题栏，菜单，边框
         hwndDC = win32gui.GetWindowDC(hWnd)
-        mfcDC = win32ui.CreateDCFromHandle(hwndDC)
         '''
         hwnd = win32gui.FindWindowEx(hWnd, 0, 'Qt5QWindowIcon', 'ScreenBoardClassWindow');
         if print_hwnd:
@@ -79,6 +90,17 @@ class Window(object):
 
 
 def get_screen_scale_factor() -> float:
+    '''
+    /***************************************************************************************************/
+    *   get_screen_scale_factor: 获取操作系统屏幕缩放倍数
+    *
+    *   输入: 无
+    *
+    *   输出:
+    *       screen_scale: float
+    *           返回系统的缩放比例，为float值，例如windows缩放设置为125%，则返回值为1.25
+    /***************************************************************************************************/
+    '''
     global_params.global_parameters.default_screen_scale
     try:
         win32api.GetDpiForSystem()

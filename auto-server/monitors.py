@@ -3,27 +3,53 @@
 import wmi
 import threading
 
-
-# TODO: 
-# 1、抽象Monitor结构体出来
-# 2、WeChatMonitor放到auto_WeChat.py中
-# 3、IpMonitor放到auto_ip_addr.py中
-
 # monitor 抽象类
 class Monitor(object):
     def __init__(self, monitor_name: str) -> None:
+        '''
+        /***************************************************************************************************/
+        *   Monitor: 初始化Monitor类
+        *       创建Monitor监控线程
+        *
+        *   输入: 
+        *       monitor_name: 创建的监控线程名称
+        *
+        *   输出:
+        *       无
+        /***************************************************************************************************/
+        '''
         # 创建线程
         self.monitor_thread = threading.Thread(target=self.monitor, name=monitor_name, daemon=True)
         pass # function __init__
     
     def start(self) -> None:
+        '''
+        /***************************************************************************************************/
+        *   启动Monitor初始化时创建的线程
+        *
+        *   输入: 无
+        *
+        *   输出: 无
+        /***************************************************************************************************/
+        '''
         self.monitor_thread.start()
         pass # function start
     
     def monitor(self) -> None:
+        '''
+        /***************************************************************************************************/
+        *   monitor: 父类Monitor定义了一个monitor接口，该接口被monitor_thread使用，需子类自行实现
+        /***************************************************************************************************/
+        '''
         pass # function monitor
     
     def operate(self) -> None:
+        '''
+        /***************************************************************************************************/
+        *   operate: 父类Monitor定义了一个operate接口，
+        *   该接口被monitor方法调用，需子类自行实现monitor的调用及函数实现
+        /***************************************************************************************************/
+        '''
         print("not implement!")
         pass # function operate
     
@@ -44,4 +70,3 @@ def check_process_running(process_name):
         if process.Name == process_name:
             return True
     return False
-
