@@ -1,4 +1,4 @@
-ï»¿# -*- coding: gb2312 -*-
+# -*- coding: gb2312 -*-
 
 import win32api
 import win32con
@@ -6,80 +6,80 @@ import win32gui
 import win32ui
 import global_params
 
-# Posä¸ºä½ç½®ç±»ï¼Œè¡¨ç¤ºåæ ‡ä½ç½®ä¿¡æ¯
+# PosÎªÎ»ÖÃÀà£¬±íÊ¾×ø±êÎ»ÖÃĞÅÏ¢
 class Pos(object):
     def __init__(self, x: int, y: int) -> None:
         '''
-        æˆå‘˜:
-            x: åæ ‡ä½ç½®çš„xåæ ‡
-            y: åæ ‡ä½ç½®çš„yåæ ‡
+        ³ÉÔ±:
+            x: ×ø±êÎ»ÖÃµÄx×ø±ê
+            y: ×ø±êÎ»ÖÃµÄy×ø±ê
         '''
         self.x = x
         self.y = y
     pass # class Pos
 
-# Windowä¸ºçª—å£ç±»
+# WindowÎª´°¿ÚÀà
 class Window(object):
     def __init__(self, window_class_name: str, window_name: str, print_hwnd: bool = False, print_text: bool = False) -> None:
         '''
-        åˆå§‹åŒ–çª—å£
-            æˆå‘˜:
-                window_name: çª—å£åï¼Œä¸€èˆ¬æ˜¯çª—å£çš„åç§°ï¼Œåœ¨æ‰“å¼€çš„ç¨‹åºçš„çª—å£æœ€ä¸Šé¢ä¸€èˆ¬ä¼šæœ‰åå­—
-                window_class_name: çª—å£çš„ç±»å‹åï¼Œå¯ä»¥åœ¨spy++ä¸­é€šè¿‡window_nameå°†çª—å£æœç´¢å‡ºæ¥åæŸ¥çœ‹
-                hWnd: çª—å£å¥æŸ„ï¼Œç”¨äºæ“ä½œæ“ä½œï¼Œæ¯”å¦‚åœ¨çª—å£ä¸­ç‚¹å‡»é¼ æ ‡ï¼Œåœ¨çª—å£ä¸­è¾“å…¥é”®ç›˜
-                window_left_top: çª—å£å·¦ä¸Šè§’çš„åæ ‡ï¼Œä¸ºPosç±»ï¼Œwindow_left_top.xä¸ºxåæ ‡ï¼Œwindow_left_top.yä¸ºyåæ ‡
-                window_right_bottom: çª—å£å³ä¸‹è§’çš„åæ ‡ï¼Œä¸ºPosç±»ï¼Œwindow_right_bottom.xä¸ºxåæ ‡ï¼Œwindow_right_bottom.yä¸ºyåæ ‡
-            å…¥å‚
-                window_name: çª—å£åï¼Œä¸€èˆ¬æ˜¯çª—å£çš„åç§°ï¼Œåœ¨æ‰“å¼€çš„ç¨‹åºçš„çª—å£æœ€ä¸Šé¢ä¸€èˆ¬ä¼šæœ‰åå­—
-                window_class_name: çª—å£çš„ç±»å‹åï¼Œå¯ä»¥åœ¨spy++ä¸­é€šè¿‡window_nameå°†çª—å£æœç´¢å‡ºæ¥åæŸ¥çœ‹
+        ³õÊ¼»¯´°¿Ú
+            ³ÉÔ±:
+                window_name: ´°¿ÚÃû£¬Ò»°ãÊÇ´°¿ÚµÄÃû³Æ£¬ÔÚ´ò¿ªµÄ³ÌĞòµÄ´°¿Ú×îÉÏÃæÒ»°ã»áÓĞÃû×Ö
+                window_class_name: ´°¿ÚµÄÀàĞÍÃû£¬¿ÉÒÔÔÚspy++ÖĞÍ¨¹ıwindow_name½«´°¿ÚËÑË÷³öÀ´ºó²é¿´
+                hWnd: ´°¿Ú¾ä±ú£¬ÓÃÓÚ²Ù×÷²Ù×÷£¬±ÈÈçÔÚ´°¿ÚÖĞµã»÷Êó±ê£¬ÔÚ´°¿ÚÖĞÊäÈë¼üÅÌ
+                window_left_top: ´°¿Ú×óÉÏ½ÇµÄ×ø±ê£¬ÎªPosÀà£¬window_left_top.xÎªx×ø±ê£¬window_left_top.yÎªy×ø±ê
+                window_right_bottom: ´°¿ÚÓÒÏÂ½ÇµÄ×ø±ê£¬ÎªPosÀà£¬window_right_bottom.xÎªx×ø±ê£¬window_right_bottom.yÎªy×ø±ê
+            Èë²Î
+                window_name: ´°¿ÚÃû£¬Ò»°ãÊÇ´°¿ÚµÄÃû³Æ£¬ÔÚ´ò¿ªµÄ³ÌĞòµÄ´°¿Ú×îÉÏÃæÒ»°ã»áÓĞÃû×Ö
+                window_class_name: ´°¿ÚµÄÀàĞÍÃû£¬¿ÉÒÔÔÚspy++ÖĞÍ¨¹ıwindow_name½«´°¿ÚËÑË÷³öÀ´ºó²é¿´
         '''
-        # é€šè¿‡ä¼ å…¥çš„çª—å£ç±»å(window_class_name)å’Œçª—å£å(window_name)æœç´¢çª—å£
+        # Í¨¹ı´«ÈëµÄ´°¿ÚÀàÃû(window_class_name)ºÍ´°¿ÚÃû(window_name)ËÑË÷´°¿Ú
         window_pos, self.hWnd = self.GetWindow(class_name=window_class_name, window_name=window_name)
-        # å°†çª—å£åä¿å­˜è‡³ç»“æ„ä½“ä¸­
+        # ½«´°¿ÚÃû±£´æÖÁ½á¹¹ÌåÖĞ
         self.window_name = window_name
-        # å°†çª—å£ç±»åä¿å­˜è‡³ç»“æ„ä½“ä¸­
+        # ½«´°¿ÚÀàÃû±£´æÖÁ½á¹¹ÌåÖĞ
         self.window_class_name = window_class_name
-        # window_left_topè¡¨ç¤ºçª—å£çš„å·¦ä¸Šè§’ï¼Œå³xä¸ºçª—å£æœ€å·¦ä¾§åæ ‡ï¼Œyä¸ºçª—å£æœ€ä¸Šé¢åæ ‡
-        self.window_left_top = Pos(window_pos[0], window_pos[1]) # å·¦ä¸Šè§’
-        # window_right_bottomè¡¨ç¤ºçª—å£çš„å³ä¸‹è§’ï¼Œå³xä¸ºçª—å£æœ€å³ä¾§åæ ‡ï¼Œyä¸ºçª—å£æœ€ä¸‹é¢åæ ‡
-        self.window_right_bottom = Pos(window_pos[2], window_pos[3]) # å³ä¸‹è§’
+        # window_left_top±íÊ¾´°¿ÚµÄ×óÉÏ½Ç£¬¼´xÎª´°¿Ú×î×ó²à×ø±ê£¬yÎª´°¿Ú×îÉÏÃæ×ø±ê
+        self.window_left_top = Pos(window_pos[0], window_pos[1]) # ×óÉÏ½Ç
+        # window_right_bottom±íÊ¾´°¿ÚµÄÓÒÏÂ½Ç£¬¼´xÎª´°¿Ú×îÓÒ²à×ø±ê£¬yÎª´°¿Ú×îÏÂÃæ×ø±ê
+        self.window_right_bottom = Pos(window_pos[2], window_pos[3]) # ÓÒÏÂ½Ç
         pass # function __init__
     
     def GetWindow(class_name: str, window_name: str, print_hwnd: bool = False, print_text: bool = False) -> tuple[tuple[int, int, int, int], int]:
         '''
         /***************************************************************************************************/
-        *   GetWindow: è¿”å›çª—å£çš„æ–‡ä»¶å¥æŸ„ï¼Œçª—å£ä½ç½®ä¿¡æ¯ç­‰ã€‚
+        *   GetWindow: ·µ»Ø´°¿ÚµÄÎÄ¼ş¾ä±ú£¬´°¿ÚÎ»ÖÃĞÅÏ¢µÈ¡£
         *   
-        *   è¾“å…¥:
-        *       window_name: çª—å£åï¼Œä¸€èˆ¬æ˜¯çª—å£çš„åç§°ï¼Œåœ¨æ‰“å¼€çš„ç¨‹åºçš„çª—å£æœ€ä¸Šé¢ä¸€èˆ¬ä¼šæœ‰åå­—
-        *       class_name: çª—å£çš„ç±»å‹åï¼Œå¯ä»¥åœ¨spy++ä¸­é€šè¿‡window_nameå°†çª—å£æœç´¢å‡ºæ¥åæŸ¥çœ‹
+        *   ÊäÈë:
+        *       window_name: ´°¿ÚÃû£¬Ò»°ãÊÇ´°¿ÚµÄÃû³Æ£¬ÔÚ´ò¿ªµÄ³ÌĞòµÄ´°¿Ú×îÉÏÃæÒ»°ã»áÓĞÃû×Ö
+        *       class_name: ´°¿ÚµÄÀàĞÍÃû£¬¿ÉÒÔÔÚspy++ÖĞÍ¨¹ıwindow_name½«´°¿ÚËÑË÷³öÀ´ºó²é¿´
         *
-        *   è¾“å‡º:
+        *   Êä³ö:
         *       window_pos: tuple[int, int, int, int]
-        *           window_posè¿”å›çª—å£çš„å±å¹•åæ ‡ï¼Œåˆ†åˆ«ä¸ºçª—å£çš„left, top, right, high
+        *           window_pos·µ»Ø´°¿ÚµÄÆÁÄ»×ø±ê£¬·Ö±ğÎª´°¿ÚµÄleft, top, right, high
         *       hWnd: int
-        *           hWndè¿”å›çª—å£çš„å¥æŸ„ï¼Œç”¨äºå¯¹è¿™ä¸ªçª—å£è¿›è¡Œæ“ä½œï¼Œä¾‹å¦‚å‘çª—å£å‘é€é¼ æ ‡é”®ç›˜æ“ä½œ
+        *           hWnd·µ»Ø´°¿ÚµÄ¾ä±ú£¬ÓÃÓÚ¶ÔÕâ¸ö´°¿Ú½øĞĞ²Ù×÷£¬ÀıÈçÏò´°¿Ú·¢ËÍÊó±ê¼üÅÌ²Ù×÷
         /***************************************************************************************************/
         '''
-        #hWndæ˜¯æ–‡ä»¶å¥æŸ„ï¼Œé€šè¿‡ä½¿ç”¨visual studioè‡ªå¸¦çš„spy++è·å¾—çš„ã€‚åœ¨å·¥å…·æ ä¸­çš„ å·¥å…·->spy++ä¸­
-        # hWnd=win32gui.FindWindow('WeChatLoginWndForPC','å¾®ä¿¡')
-        hWnd=win32gui.FindWindow('WeChatMainWndForPC','å¾®ä¿¡')
-        # é€šè¿‡çª—å£å¥æŸ„ï¼Œè·å–çª—å£çš„åæ ‡ä¿¡æ¯ï¼Œè¯¥åæ ‡ä¸ºå±å¹•åæ ‡ï¼Œå³çª—å£å¤„åœ¨å±å¹•ä¸­çš„ä»€ä¹ˆåæ ‡
+        #hWndÊÇÎÄ¼ş¾ä±ú£¬Í¨¹ıÊ¹ÓÃvisual studio×Ô´øµÄspy++»ñµÃµÄ¡£ÔÚ¹¤¾ßÀ¸ÖĞµÄ ¹¤¾ß->spy++ÖĞ
+        # hWnd=win32gui.FindWindow('WeChatLoginWndForPC','Î¢ĞÅ')
+        hWnd=win32gui.FindWindow('WeChatMainWndForPC','Î¢ĞÅ')
+        # Í¨¹ı´°¿Ú¾ä±ú£¬»ñÈ¡´°¿ÚµÄ×ø±êĞÅÏ¢£¬¸Ã×ø±êÎªÆÁÄ»×ø±ê£¬¼´´°¿Ú´¦ÔÚÆÁÄ»ÖĞµÄÊ²Ã´×ø±ê
         window_pos = win32gui.GetWindowRect(hWnd)
-        #è¿”å›å¥æŸ„çª—å£çš„è®¾å¤‡ç¯å¢ƒï¼Œè¦†ç›–æ•´ä¸ªçª—å£ï¼ŒåŒ…æ‹¬éå®¢æˆ·åŒºï¼Œæ ‡é¢˜æ ï¼Œèœå•ï¼Œè¾¹æ¡†
+        #·µ»Ø¾ä±ú´°¿ÚµÄÉè±¸»·¾³£¬¸²¸ÇÕû¸ö´°¿Ú£¬°üÀ¨·Ç¿Í»§Çø£¬±êÌâÀ¸£¬²Ëµ¥£¬±ß¿ò
         hwndDC = win32gui.GetWindowDC(hWnd)
         '''
         hwnd = win32gui.FindWindowEx(hWnd, 0, 'Qt5QWindowIcon', 'ScreenBoardClassWindow');
         if print_hwnd:
             print('hwnd =',hwnd)
-        text = win32gui.GetWindowText(hwnd)                      #è¿”å›çš„æ˜¯çª—å£çš„åå­—ï¼ˆä¸ä¸€å®šæ˜¯çª—å£å·¦ä¸Šè§’æ˜¾ç¤ºçš„åå­—ï¼‰
+        text = win32gui.GetWindowText(hwnd)                      #·µ»ØµÄÊÇ´°¿ÚµÄÃû×Ö£¨²»Ò»¶¨ÊÇ´°¿Ú×óÉÏ½ÇÏÔÊ¾µÄÃû×Ö£©
         if print_text:
             print('Window Text =',text)
-        hwnd_pos = win32gui.GetWindowRect(hwnd)  #(left,top)æ˜¯å·¦ä¸Šè§’çš„åæ ‡ï¼Œ(right,bottom)æ˜¯å³ä¸‹è§’çš„åæ ‡
+        hwnd_pos = win32gui.GetWindowRect(hwnd)  #(left,top)ÊÇ×óÉÏ½ÇµÄ×ø±ê£¬(right,bottom)ÊÇÓÒÏÂ½ÇµÄ×ø±ê
         #win32gui.SetForegroundWindow(hwnd)
-        #è¿”å›å¥æŸ„çª—å£çš„è®¾å¤‡ç¯å¢ƒï¼Œè¦†ç›–æ•´ä¸ªçª—å£ï¼ŒåŒ…æ‹¬éå®¢æˆ·åŒºï¼Œæ ‡é¢˜æ ï¼Œèœå•ï¼Œè¾¹æ¡†
+        #·µ»Ø¾ä±ú´°¿ÚµÄÉè±¸»·¾³£¬¸²¸ÇÕû¸ö´°¿Ú£¬°üÀ¨·Ç¿Í»§Çø£¬±êÌâÀ¸£¬²Ëµ¥£¬±ß¿ò
         hwndDC = win32gui.GetWindowDC(hwnd)
-        #åˆ›å»ºè®¾å¤‡æè¿°è¡¨
+        #´´½¨Éè±¸ÃèÊö±í
         mfcDC = win32ui.CreateDCFromHandle(hwndDC)
         return (window_pos, hwnd_pos, hwnd, hwndDC, mfcDC)
         '''
@@ -92,20 +92,20 @@ class Window(object):
 def get_screen_scale_factor() -> float:
     '''
     /***************************************************************************************************/
-    *   get_screen_scale_factor: è·å–æ“ä½œç³»ç»Ÿå±å¹•ç¼©æ”¾å€æ•°
+    *   get_screen_scale_factor: »ñÈ¡²Ù×÷ÏµÍ³ÆÁÄ»Ëõ·Å±¶Êı
     *
-    *   è¾“å…¥: æ— 
+    *   ÊäÈë: ÎŞ
     *
-    *   è¾“å‡º:
+    *   Êä³ö:
     *       screen_scale: float
-    *           è¿”å›ç³»ç»Ÿçš„ç¼©æ”¾æ¯”ä¾‹ï¼Œä¸ºfloatå€¼ï¼Œä¾‹å¦‚windowsç¼©æ”¾è®¾ç½®ä¸º125%ï¼Œåˆ™è¿”å›å€¼ä¸º1.25
+    *           ·µ»ØÏµÍ³µÄËõ·Å±ÈÀı£¬ÎªfloatÖµ£¬ÀıÈçwindowsËõ·ÅÉèÖÃÎª125%£¬Ôò·µ»ØÖµÎª1.25
     /***************************************************************************************************/
     '''
     global_params.global_parameters.default_screen_scale
     try:
         win32api.GetDpiForSystem()
         hDC = win32api.GetDC(0)
-        dpiX = win32api.GetDeviceCaps(hDC, win32api.LOGPIXELSX)  # è·å–æ°´å¹³DPI
+        dpiX = win32api.GetDeviceCaps(hDC, win32api.LOGPIXELSX)  # »ñÈ¡Ë®Æ½DPI
         win32api.ReleaseDC(0, hDC)
         return dpiX / 96.0
     except Exception as e:
