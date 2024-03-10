@@ -24,7 +24,7 @@ class Mouse(object):
         # 按下鼠标
         win32gui.SendMessage(hWnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, click_pos_in_window_long)
         # 抬起鼠标
-        win32gui.SendMessage(hWnd, win32con.WM_LBUTTONUP, 0000, click_pos_in_window_long)
+        win32gui.SendMessage(hWnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, click_pos_in_window_long)
     pass # class Mouse
 
 class Keyboard(object):

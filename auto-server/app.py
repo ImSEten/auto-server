@@ -9,16 +9,15 @@ class App(object):
 
 def main():
     message_event = queue.Queue()
-    wechat_monitor = auto_WeChat.WeChatMonitor()
-    wechat_monitor.start()
     ipv6_monitor = auto_ip_addr.IpMonitor(message_event=message_event)
     ipv6_monitor.start()
     
-    wechat_operator = auto_WeChat.WeChatSender(message_event)
-    wechat_operator.start()
+    wechat_monitor = auto_WeChat.WeChatMonitor(message_event)
+    wechat_monitor.start()
     # 等待monitor线程结束
     ipv6_monitor.monitor_thread.join()
     wechat_monitor.monitor_thread.join()
+    wechat_monitor.operator_thread.join()
     pass # function: main
 
 

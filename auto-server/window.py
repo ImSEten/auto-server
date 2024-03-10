@@ -64,7 +64,7 @@ class Window(object):
         '''
         #hWnd是文件句柄，通过使用visual studio自带的spy++获得的。在工具栏中的 工具->spy++中
         # hWnd=win32gui.FindWindow('WeChatLoginWndForPC','微信')
-        hWnd=win32gui.FindWindow('WeChatMainWndForPC','微信')
+        hWnd=win32gui.FindWindow(class_name, window_name)
         # 通过窗口句柄，获取窗口的坐标信息，该坐标为屏幕坐标，即窗口处在屏幕中的什么坐标
         window_pos = win32gui.GetWindowRect(hWnd)
         #返回句柄窗口的设备环境，覆盖整个窗口，包括非客户区，标题栏，菜单，边框
