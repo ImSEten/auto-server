@@ -25,8 +25,20 @@ class Mouse(object):
         win32gui.SendMessage(hWnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, click_pos_in_window_long)
         # Ì§ÆðÊó±ê
         win32gui.SendMessage(hWnd, win32con.WM_LBUTTONUP, 0000, click_pos_in_window_long)
-    pass
+    pass # class Mouse
 
-
+class Keyboard(object):
+    def tap(self, message: str, hWnd: int) -> None:
+        print("send message:", message)
+        for s in message.encode():
+            win32gui.SendMessage(hWnd, win32con.WM_CHAR, s, 0)
+            pass # for x in string
+        pass # function tap
+    
+    def tap_enter(self, hWnd: int) -> None:
+        win32gui.PostMessage(hWnd, win32con.WM_KEYDOWN, win32con.VK_RETURN, 0)
+        win32gui.PostMessage(hWnd, win32con.WM_KEYUP, win32con.VK_RETURN, 0)
+        pass # function new_line
+    pass # class Keyboard
 
 

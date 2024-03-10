@@ -22,7 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
-    <Compile Include="auto_mouse.py" />
+    <Compile Include="auto_mouse_keyboard.py" />
     <Compile Include="auto_server.py" />
     <Compile Include="auto_WeChat.py" />
     <Compile Include="global_params.py" />

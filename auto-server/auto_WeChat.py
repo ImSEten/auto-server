@@ -1,7 +1,7 @@
 # -*- coding: gb2312 -*-
 
 import window
-import auto_mouse
+import auto_mouse_keyboard
 import monitors
 import queue
 import win32process
@@ -9,6 +9,7 @@ import win32api
 import win32con
 import time
 import global_params
+import threading
 
 class WeChatMonitor(monitors.Monitor):
     def __init__(self) -> None:
@@ -138,7 +139,6 @@ class WeChatMonitor(monitors.Monitor):
         pass # function operate
     pass # class: Monitor
 
-
 class Person(object):
     '''
     /***************************************************************************************************/
@@ -168,7 +168,13 @@ class Person(object):
     pass
 
 class Process(object):
-    def __init__(self, process_id = -1, process_hWnd = -1, running = False) -> None:
+    '''
+    Process进程，包含进程的各种信息
+        1、进程pid
+        2、进程窗口句柄
+        3、进程是否运行中
+    '''
+    def __init__(self, process_id = -1, process_window: window.Window = None , running = False) -> None:
         '''
         /***************************************************************************************************/
         *   __init__: 初始化Process类，pid、process窗口句柄，是否正在运行
@@ -179,13 +185,13 @@ class Process(object):
         /***************************************************************************************************/
         '''
         self.process_id = process_id
-        self.process_hWnd = process_hWnd
+        self.process_window = process_window
         self.running = running
         pass # function __init__
     pass # class Process
 
-class WeChatOperator(object):
-    def __init__(self) -> None:
+class WeChatSender(object):
+    def __init__(self, message_queue: queue.Queue) -> None:
         '''
         /***************************************************************************************************/
         *   __init__: 初始化WeChatOperator结构体
@@ -198,11 +204,57 @@ class WeChatOperator(object):
         *   输出: 无
         /***************************************************************************************************/
         '''
-        self.wechat_login_process = Process()
-        self.wechat_chat_process = Process()
+        # 初始化一个鼠标结构体和键盘结构体
+        self.mouse = auto_mouse_keyboard.Mouse()
+        self.keyboard = auto_mouse_keyboard.Keyboard()
+        
+        wechat_login_window = window.Window(window_class_name='WeChatLoginWndForPC', window_name='微信')
+        wechat_chat_window = window.Window(window_class_name='WeChatMainWndForPC', window_name='微信')
+        self.wechat_login_process = Process(process_window=wechat_login_window)
+        self.wechat_chat_process = Process(process_window=wechat_chat_window)
+        self.message_queue = message_queue
+        self.operator_thread = threading.Thread(target=self.get_event, name="WeChatOperator", daemon=True)
         pass # function __init__
+    
+    def start(self) -> None:
+        self.operator_thread.start()
+        pass # function start
+    
+    def get_event(self) -> None:
+        '''
+        /***************************************************************************************************/
+        * 从自身的queue中获取消息，用于发送给用户
+        *
+        * 输入: 无
+        *
+        * 输出: 无
+        /***************************************************************************************************/
+        '''
+        while True:
+            message = self.message_queue.get()
+            print("receive a message:", message)
+            time.sleep(1)
+            try:
+                self.send_message(person=None, message=message)
+            except:
+                self.message_queue.put(message)
+                print("Error: function get_event(): cannot send message:", message)
+                continue
+                pass # try except
+            pass # while True
+        pass # function get_event
+    
+    def get_person_click_pos(self, person: Person) -> window.Pos:
+        # TODO: choose someone
+        #(273, 137)
+        first_person_pos = window.Pos(210, 100)
+        click_pos = window.Pos(
+            self.wechat_chat_process.process_window.window_left_top.x + first_person_pos.x, 
+            self.wechat_chat_process.process_window.window_left_top.y + first_person_pos.y)
+        return click_pos
+        pass # function choose_person
 
-    def send_messages(self, person: Person, messages: list[str]) -> None:
+    def send_message(self, person: Person, message: str) -> None:
         '''
         /***************************************************************************************************/
         *   send_messages: WeChat进程发送消息
@@ -215,10 +267,17 @@ class WeChatOperator(object):
         *   输出: 无
         /***************************************************************************************************/
         '''
+        # 点击第一个人
+        person_click_pos = self.get_person_click_pos(person=person)
+        self.mouse.MoveAndClick(person_click_pos, self.wechat_chat_process.process_window.hWnd)
+        # 输入数据
+        self.keyboard.tap(message, self.wechat_chat_process.process_window.hWnd)
+        # 发送消息
+        self.keyboard.tap_enter(self.wechat_chat_process.process_window.hWnd)
         pass # function send_messages
     pass # class WeChatOperator
 
-def wechat_login():
+def login_wechat():
     '''
     /***************************************************************************************************/
     *   wechat_login: 登录微信
@@ -233,11 +292,11 @@ def wechat_login():
     /***************************************************************************************************/
     '''
     # 获取微信进程的信息。
-    wechat_window = window.Window(window_class_name='WeChatLoginWndForPC', window_name='微信')
-    print("wechat window position =", wechat_window.window_left_top.x, wechat_window.window_left_top.y, wechat_window.window_right_bottom.x, wechat_window.window_right_bottom.y)
-    print("wechat window hwnd =", wechat_window.hWnd)
+    wechat_login_window = window.Window(window_class_name='WeChatLoginWndForPC', window_name='微信')
+    print("wechat window position =", wechat_login_window.window_left_top.x, wechat_login_window.window_left_top.y, wechat_login_window.window_right_bottom.x, wechat_login_window.window_right_bottom.y)
+    print("wechat window hwnd =", wechat_login_window.hWnd)
     # 初始化一个鼠标结构体
-    mouse = auto_mouse.Mouse()
+    mouse = auto_mouse_keyboard.Mouse()
     # TODO: screen_scale，屏幕缩放比例
     # 实测不需要进行屏幕缩放比例的调整
     screen_scale = window.get_screen_scale_factor()
@@ -245,9 +304,9 @@ def wechat_login():
 
     # 登陆微信按钮的位置信息，该位置信息是相对于窗口左上角的位置信息。
     # 例如微信按钮的位置为：140, 300表示从左上角开始+140，左上角+300则是按钮位置。
-    login_pos = window.Pos(int((wechat_window.window_right_bottom.x - wechat_window.window_left_top.x) / 2 * screen_scale), int((wechat_window.window_right_bottom.y - wechat_window.window_left_top.y) / 5 * 4 * screen_scale))
+    login_pos = window.Pos(int((wechat_login_window.window_right_bottom.x - wechat_login_window.window_left_top.x) / 2 * screen_scale), int((wechat_login_window.window_right_bottom.y - wechat_login_window.window_left_top.y) / 5 * 4 * screen_scale))
     print("login position =", login_pos.x, login_pos.y)
-    click_pos = window.Pos(int(login_pos.x + wechat_window.window_left_top.x), int(login_pos.y + wechat_window.window_left_top.y))
+    click_pos = window.Pos(int(login_pos.x + wechat_login_window.window_left_top.x), int(login_pos.y + wechat_login_window.window_left_top.y))
     # 鼠标点击
-    mouse.MoveAndClick(click_pos, wechat_window.hWnd)
+    mouse.MoveAndClick(click_pos, wechat_login_window.hWnd)
     pass # function: wechat_login

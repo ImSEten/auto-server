@@ -41,6 +41,7 @@ class Monitor(object):
         *   monitor: 父类Monitor定义了一个monitor接口，该接口被monitor_thread使用，需子类自行实现
         /***************************************************************************************************/
         '''
+        print("function monitor not implement!")
         pass # function monitor
     
     def operate(self) -> None:
@@ -50,7 +51,7 @@ class Monitor(object):
         *   该接口被monitor方法调用，需子类自行实现monitor的调用及函数实现
         /***************************************************************************************************/
         '''
-        print("not implement!")
+        print("function operate not implement!")
         pass # function operate
     
     pass # class Monitor

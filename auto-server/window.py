@@ -34,6 +34,7 @@ class Window(object):
                 window_class_name: 窗口的类型名，可以在spy++中通过window_name将窗口搜索出来后查看
         '''
         # 通过传入的窗口类名(window_class_name)和窗口名(window_name)搜索窗口
+        print("class_name =", window_class_name)
         window_pos, self.hWnd = self.GetWindow(class_name=window_class_name, window_name=window_name)
         # 将窗口名保存至结构体中
         self.window_name = window_name
@@ -45,7 +46,7 @@ class Window(object):
         self.window_right_bottom = Pos(window_pos[2], window_pos[3]) # 右下角
         pass # function __init__
     
-    def GetWindow(class_name: str, window_name: str, print_hwnd: bool = False, print_text: bool = False) -> tuple[tuple[int, int, int, int], int]:
+    def GetWindow(self, class_name: str, window_name: str, print_hwnd: bool = False, print_text: bool = False) -> tuple[tuple[int, int, int, int], int]:
         '''
         /***************************************************************************************************/
         *   GetWindow: 返回窗口的文件句柄，窗口位置信息等。

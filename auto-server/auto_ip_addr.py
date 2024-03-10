@@ -7,7 +7,7 @@ import socket
 import global_params
 
 class IpMonitor(monitors.Monitor):
-    def __init__(self) -> None:
+    def __init__(self, message_event: queue.Queue) -> None:
         '''
         /***************************************************************************************************/
         *   __init__: 初始化IpMonitor结构体
@@ -20,7 +20,7 @@ class IpMonitor(monitors.Monitor):
         # TODO: 获取以前的ip地址
         # self.ipv6用于存储系统ipv6地址信息
         self.ipv6 = []
-        self.state_changed = queue.Queue()
+        self.message_event = message_event
         # 调用父类，创建一个名为IpMonitor的线程，用于执行本类的monitor方法
         # 该线程将在本类继承自父类的start()函数被调用时被真正创建
         super().__init__("IpMonitor")
@@ -79,7 +79,7 @@ class IpMonitor(monitors.Monitor):
             print("warning: ipv6 addr has changed!")
             print("old ip:", self.ipv6)
             print("new ip:", ipv6)
-            self.ipv6 = ipv6 # 修改monitor中的ipv6地址
+            self.ipv6 = ipv6 # 修改monitor中的ipv6地址，便于之后将其发送给operator
             return True
         else:
             print("debug: ipv6 addr keep the same.")
@@ -123,6 +123,9 @@ class IpMonitor(monitors.Monitor):
         '''
         # TODO: ip地址发生变化时，通知wechat，发送信息
         print("TODO: ip地址发生变化时，通知wechat，发送信息")
+        for ipv6 in self.ipv6:
+            self.message_event.put(ipv6)
+            pass # for ipvt in self.ipv6
         pass # function operate
     pass # class: IpMonitor
 
