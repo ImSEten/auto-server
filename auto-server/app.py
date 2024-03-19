@@ -17,7 +17,7 @@ def main():
     # 等待monitor线程结束
     ipv6_monitor.monitor_thread.join()
     wechat_monitor.monitor_thread.join()
-    wechat_monitor.operator_thread.join()
+    wechat_monitor.message_sender_thread.join()
     pass # function: main
 
 
