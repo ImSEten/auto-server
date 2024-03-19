@@ -250,14 +250,24 @@ class WeChatMonitor(monitors.Monitor):
             if state == 0:
                 print("WeChat process is not running!")
                 print("Starting WeChat process now!")
+                try:
+                    self.start_wechat_process()
+                    pass
+                except :
+                    print("start wechat process error!")
+                    pass
                 time.sleep(10)
                 continue
             elif state == 1:
                 print("WeChat is logging!")
                 print("log in now!")
-                time.sleep(10)
+                try:
+                    self.login_wechat()
+                except :
+                    print("login wechat error!")
+                    pass
             elif state == 2:
-                print("WeChat is running well")
+                print("WeChat is running well, do nothing")
                 pass # if state
             time.sleep(global_params.global_parameters.check_interval) # 每check_interval秒检查一次WeChat进程
             continue
@@ -277,6 +287,8 @@ class WeChatMonitor(monitors.Monitor):
                 return 1
                 pass
             except : # WeChat is not running
+                self.wechat_chat_process = None
+                self.wechat_login_process = None
                 print("TODO: start WeChat process!")
                 return 0
                 pass
@@ -290,7 +302,7 @@ class WeChatMonitor(monitors.Monitor):
     def get_event(self) -> None:
         '''
         /***************************************************************************************************/
-        * 从自身的queue中获取消息，用于发送给用户
+        * 从自身的queue中获取消息，用于发送给用户，获取到消息后，需要立即获取微信进程的状态
         *
         * 输入: 无
         *
@@ -300,8 +312,10 @@ class WeChatMonitor(monitors.Monitor):
         while True:
             message = self.message_queue.get()
             print("receive a message:", message)
+            # 获取wechat进程状态
             state = self.update_wechat_process()
-            if state == 0: # wechat非running状态，启动wechat进程，重新执行
+            if state == 0: # wechat非running状态，启动wechat进程
+                self.start_wechat_process()
                 pass
             elif state == 1:
                 self.login_wechat()
@@ -363,7 +377,16 @@ class WeChatMonitor(monitors.Monitor):
         click_pos = window.Pos(int(login_pos.x + self.wechat_login_process.process_window.window_left_top.x), int(login_pos.y + self.wechat_login_process.process_window.window_left_top.y))
         # 鼠标点击
         self.mouse.MoveAndClick(click_pos, self.wechat_login_process.process_window.hWnd)
+        print("WeChat is logging, waiting 15s")
+        time.sleep(15)
+        self.update_wechat_process()
         pass # function login_wechat
+    
+    def start_wechat_process(self) -> None:
+        win32api.ShellExecute(0, 'open', "C:\Program Files\Tencent\WeChat\WeChat.exe", '', '', 1)
+        time.sleep(10)
+        self.update_wechat_process()
+        pass # function start_wechat_process
     pass # class WeChatOperator
 
 def login_wechat():
