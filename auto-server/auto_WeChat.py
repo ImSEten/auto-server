@@ -252,10 +252,10 @@ class WeChatMonitor(monitors.Monitor):
             # 每check_interval秒检查一次WeChat进程
             try:
                 self.update_wechat_queue.get(timeout=global_params.global_parameters.check_interval)
-                self.update_wechat_process_state()
                 pass
             except:
                 pass
+            self.update_wechat_process_state()
             pass # end while True
         pass # function monitor_wechat
     

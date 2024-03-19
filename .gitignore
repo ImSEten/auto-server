@@ -1,2 +1,4 @@
 ﻿/.vs
 /auto-server/__pycache__
+/auto-server/build/auto_server
+/auto-server/dist
