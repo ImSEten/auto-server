@@ -1,4 +1,6 @@
 ﻿/.vs
-/auto-server/__pycache__
-/auto-server/build/auto_server
-/auto-server/dist
+/auto-server-old/auto-server/__pycache__
+/auto-server-old/auto-server/build/auto_server
+/auto-server-old/auto-server/dist
+/auto-service/target
+/auto-service/Cargo.lock

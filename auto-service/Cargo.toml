@@ -1,0 +1,25 @@
+[workspace]
+members = [
+    "crates/ip-service",
+    "crates/service-protos",
+    "crates/services"
+]
+resolver = "2"
+
+[profile.release]
+panic = 'abort'
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+[workspace.dependencies]
+tokio = { version = "1.40.0" }
+tonic = { version = "0.12.3" }
+prost = { version = "0.13" }
+prost-types = { version = "0.13" }
+console-api = { version = "0.6.0" }
+console-subscriber = { version = "0.2.0" }
+
+#[workspace.build-dependencies]
+#tonic-build = { version = "0.12.3" }

@@ -1,0 +1,14 @@
+[package]
+name = "ip-service"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+service-protos = { path = "../service-protos" }
+tokio = { workspace = true, features = ["full"], optional = true }
+tonic = { workspace = true, optional = true }
+async-trait = { version = "0.1.83", optional = true }
+
+[features]
+connect = ["tonic", "async-trait", "tokio"]
+default = ["connect"]

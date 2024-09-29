@@ -1,0 +1,12 @@
+[package]
+name = "services"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+service-protos = { path = "../service-protos" }
+ip-service = { path = "../ip-service" }
+tokio = { workspace = true, features = ["full"] }
+tonic = { workspace = true }
+
+[build-dependencies]
