@@ -20,7 +20,7 @@ jobs:
     - name: install-protoc
       run: ./scripts/install_protoc.sh
     - name: Run tests
-      run: cargo test --verbose
+      run: cd auto-service; cargo test --verbose
     - name: Run clippy
       run: cargo clippy --all-targets -- -D warnings
     - name: Run clippy all
@@ -35,5 +35,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: install-protoc
+        run: ./scripts/install_protoc.sh
       - name: Build
         run: cd auto-service; cargo build --verbose
