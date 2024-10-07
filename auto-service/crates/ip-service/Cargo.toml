@@ -6,8 +6,9 @@ edition.workspace = true
 [dependencies]
 service-protos = { path = "../service-protos" }
 tokio = { workspace = true, features = ["full"], optional = true }
+common = { path = "../common" }
 tonic = { workspace = true, optional = true }
-async-trait = { version = "0.1.83", optional = true }
+async-trait = { workspace = true, optional = true }
 
 [features]
 connect = ["tonic", "async-trait", "tokio"]

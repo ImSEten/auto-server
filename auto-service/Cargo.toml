@@ -1,8 +1,10 @@
 [workspace]
 members = [
+    "crates/auto-client",
+    "crates/common",
     "crates/ip-service",
     "crates/service-protos",
-    "crates/services"
+    "crates/auto-services"
 ]
 resolver = "2"
 
@@ -20,6 +22,7 @@ prost = { version = "0.13" }
 prost-types = { version = "0.13" }
 console-api = { version = "0.6.0" }
 console-subscriber = { version = "0.2.0" }
+async-trait = { version = "0.1.83" }
 
 #[workspace.build-dependencies]
 #tonic-build = { version = "0.12.3" }
