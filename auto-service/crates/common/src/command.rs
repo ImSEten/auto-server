@@ -13,10 +13,7 @@ impl Command {
             .stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::piped());
 
-        Command {
-            name,
-            cmd,
-        }
+        Command { name, cmd }
     }
 
     pub async fn run(name: String, args: Vec<String>) -> (String, String) {

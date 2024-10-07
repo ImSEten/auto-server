@@ -10,11 +10,7 @@ pub async fn get_net_info() -> Vec<NetDevice> {
         let (stdout, _stderr) = common::command::Command::run("ip".to_string(), args.clone()).await;
         let ips = parse_ip_addr(stdout.as_str());
         let mac = parse_mac_addr(stdout.as_str());
-        net_devices.push(NetDevice {
-            device,
-            mac,
-            ips,
-        });
+        net_devices.push(NetDevice { device, mac, ips });
         args.pop();
     }
     net_devices
