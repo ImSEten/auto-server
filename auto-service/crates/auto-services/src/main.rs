@@ -1,7 +1,7 @@
 use service_protos::proto_ip_service;
 use tonic::transport::Server;
 
-const IP: &str = "192.168.99.3";
+const IP: &str = "[::]";
 const PORT: &str = "10086";
 
 fn main() {
@@ -26,8 +26,6 @@ pub async fn create_service() {
     let addr = (IP.to_string() + ":" + PORT)
         .parse()
         .expect("cannot parse addr");
-    // let addr = "192.168.99.3:10086".parse().expect("cannot parse addr");
-    // let addr = "[::]:10086".parse().expect("cannot parse addr");
     let server = ip_service::ip_server::IpServer::default();
     let svc = proto_ip_service::ip_server::IpServer::new(server);
     Server::builder()
