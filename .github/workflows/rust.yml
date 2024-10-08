@@ -19,13 +19,15 @@ jobs:
     - uses: actions/checkout@v4
     - name: install-protoc
       run: ./scripts/install_protoc.sh
-    - name: Run tests
+    - name: Run cargo test --verbose
       run: cd auto-service; cargo test --verbose
-    - name: Run clippy
+    - name: Run cargo clippy --all-targets -- -D warnings
       run: cd auto-service; cargo clippy --all-targets -- -D warnings
-    - name: Run clippy all
+    - name: Run cargo clippy --all-targets --all-features -- -D warnings
       run: cd auto-service; cargo clippy --all-targets --all-features -- -D warnings
-    - name: Run fmt
+    - name: Run rustup toolchain install nightly --component rustfmt
+      run: rustup toolchain install nightly --component rustfmt
+    - name: Run cargo +nightly fmt --all -- --check --files-with-diff
       run: cd auto-service; cargo +nightly fmt --all -- --check --files-with-diff
 
   Build:
