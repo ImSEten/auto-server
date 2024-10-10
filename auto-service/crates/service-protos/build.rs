@@ -20,6 +20,7 @@ fn gen_protos(name: &str, inputs: Vec<&str>) {
         .build_server(true)
         .build_client(true)
         .compile_well_known_types(true)
+        .type_attribute(".", "#[derive(serde::Serialize, serde::Deserialize)]")
         .build_transport(true)
         .generate_default_stubs(true)
         .compile_protos(inputs.as_slice(), &[""])
