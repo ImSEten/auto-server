@@ -1,4 +1,13 @@
+use std::sync::Arc;
+use tokio::{sync::Mutex, task::JoinHandle};
+
+use crate::ip_client::Client;
+
 use service_protos::proto_ip_service::NetDevice;
+
+pub struct IpService {
+    pub net_devices: Mutex<Vec<NetDevice>>,
+}
 
 #[cfg(target_os = "linux")]
 pub async fn get_net_info() -> Vec<NetDevice> {
@@ -97,6 +106,43 @@ fn parse_mac_addr(ip_addr_show: &str) -> String {
             })
         })
         .collect::<String>()
+}
+
+pub async fn monitor_ip<T>(client: Arc<Mutex<Client>>) -> JoinHandle<T>
+where
+    T: std::marker::Send + 'static,
+{
+    let ip_service = Arc::new(IpService {
+        net_devices: Mutex::new(get_net_info().await),
+    });
+    tokio::spawn(async move {
+        loop {
+            let net_devices = get_net_info().await;
+            let mut c = client.lock().await;
+            if c.client.is_none() {
+                if let Err(_e) = c.re_connect().await {
+                    tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
+                    continue;
+                }
+            }
+
+            {
+                let mut ip_service_lock = ip_service.net_devices.lock().await;
+                if *ip_service_lock != net_devices {
+                    match c.add_remote(net_devices.clone()).await {
+                        Ok(_) => {
+                            *ip_service_lock = net_devices;
+                        }
+                        Err(e) => {
+                            println!("add_remote error: {:?}", e);
+                            let _ = c.re_connect().await;
+                        }
+                    }
+                }
+            }
+            tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
+        }
+    })
 }
 
 #[cfg(target_os = "windows")]
