@@ -7,7 +7,9 @@ pub async fn get_net_info() -> Vec<NetDevice> {
     let mut net_devices: Vec<NetDevice> = Vec::new();
     for device in devices {
         args.push(device.clone());
-        let (stdout, _stderr) = common::command::Command::run("ip".to_string(), args.clone()).await.unwrap();
+        let (stdout, _stderr) = common::command::Command::run("ip".to_string(), args.clone())
+            .await
+            .unwrap();
         let ips = parse_ip_addr(stdout.as_str());
         let mac = parse_mac_addr(stdout.as_str());
         net_devices.push(NetDevice { device, mac, ips });
@@ -22,7 +24,8 @@ async fn get_net_devices() -> Vec<String> {
         "ip".to_string(),
         vec!["link".to_string(), "show".to_string()],
     )
-    .await.unwrap();
+    .await
+    .unwrap();
     let devices = parse_net_devices(stdout.as_str());
     devices
 }

@@ -1,5 +1,5 @@
-use tokio::io::{AsyncRead, AsyncReadExt};
 use std::io::Result;
+use tokio::io::{AsyncRead, AsyncReadExt};
 
 pub struct Command {
     pub name: String,
