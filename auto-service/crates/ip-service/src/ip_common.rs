@@ -9,22 +9,29 @@ pub struct IpService {
     pub net_devices: Mutex<Vec<NetDevice>>,
 }
 
+impl IpService {
+    pub async fn new() -> Self {
+        IpService {
+            net_devices: Mutex::new(get_net_info().await.unwrap_or_default()),
+        }
+    }
+}
+
 #[cfg(target_os = "linux")]
-pub async fn get_net_info() -> Vec<NetDevice> {
+pub async fn get_net_info() -> std::io::Result<Vec<NetDevice>> {
     let devices = get_net_devices().await;
     let mut args = vec!["addr".to_string(), "show".to_string()];
     let mut net_devices: Vec<NetDevice> = Vec::new();
     for device in devices {
         args.push(device.clone());
-        let (stdout, _stderr) = common::command::Command::run("ip".to_string(), args.clone())
-            .await
-            .unwrap();
+        let (stdout, _stderr) =
+            common::command::Command::run("ip".to_string(), args.clone()).await?;
         let ips = parse_ip_addr(stdout.as_str());
         let mac = parse_mac_addr(stdout.as_str());
         net_devices.push(NetDevice { device, mac, ips });
         args.pop();
     }
-    net_devices
+    Ok(net_devices)
 }
 
 #[cfg(target_os = "linux")]
@@ -108,16 +115,11 @@ fn parse_mac_addr(ip_addr_show: &str) -> String {
         .collect::<String>()
 }
 
-pub async fn monitor_ip<T>(client: Arc<Mutex<Client>>) -> JoinHandle<T>
-where
-    T: std::marker::Send + 'static,
-{
-    let ip_service = Arc::new(IpService {
-        net_devices: Mutex::new(get_net_info().await),
-    });
+pub async fn monitor_ip(client: Arc<Mutex<Client>>) -> JoinHandle<std::io::Result<()>> {
+    let ip_service = IpService::new().await;
     tokio::spawn(async move {
         loop {
-            let net_devices = get_net_info().await;
+            let net_devices = get_net_info().await?;
             let mut c = client.lock().await;
             if c.client.is_none() {
                 if let Err(_e) = c.re_connect().await {

@@ -23,6 +23,6 @@ async fn create_client(server_ip: String, port: String) -> Arc<Mutex<Client>> {
 
 async fn async_main() {
     let client = create_client(IP.to_string(), PORT.to_string()).await;
-    let handle = ip_service::ip_common::monitor_ip::<String>(client.clone()).await;
+    let handle = ip_service::ip_common::monitor_ip(client.clone()).await;
     let _ = tokio::join!(handle);
 }
