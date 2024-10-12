@@ -1,4 +1,5 @@
 use tokio::io::{AsyncRead, AsyncReadExt};
+use std::io::Result;
 
 pub struct Command {
     pub name: String,
@@ -16,7 +17,7 @@ impl Command {
         Command { name, cmd }
     }
 
-    pub async fn run(name: String, args: Vec<String>) -> (String, String) {
+    pub async fn run(name: String, args: Vec<String>) -> Result<(String, String)> {
         let mut cmd = Self::new(name, args);
         let child = cmd.cmd.spawn().expect("start cmd error");
         let _pid = child.id().expect("cannot get child pid");
@@ -25,8 +26,10 @@ impl Command {
             read_std(child.stderr),
             cmd.cmd.status()
         );
-        status.expect("spawn child error");
-        (stdout, stderr)
+        if let Err(e) = status {
+            return Err(e)
+        }
+        Ok((stdout, stderr))
     }
 }
 
