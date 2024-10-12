@@ -1,5 +1,5 @@
 [package]
-name = "auto-services"
+name = "auto-server"
 version.workspace = true
 edition.workspace = true
 

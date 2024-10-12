@@ -4,7 +4,7 @@ members = [
     "crates/common",
     "crates/ip-service",
     "crates/service-protos",
-    "crates/auto-services"
+    "crates/auto-server"
 ]
 resolver = "2"
 

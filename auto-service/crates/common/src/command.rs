@@ -26,9 +26,7 @@ impl Command {
             read_std(child.stderr),
             cmd.cmd.status()
         );
-        if let Err(e) = status {
-            return Err(e)
-        }
+        status?;
         Ok((stdout, stderr))
     }
 }
