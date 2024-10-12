@@ -1,9 +1,9 @@
-use ip_service::ip_client::Client;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-const IP: &str = "192.168.99.3";
-const PORT: &str = "10086";
+use ip_service::ip_client::Client;
+
+mod flags;
 
 fn main() {
     let runtime = tokio::runtime::Builder::new_multi_thread()
@@ -22,7 +22,7 @@ async fn create_client(server_ip: String, port: String) -> Arc<Mutex<Client>> {
 }
 
 async fn async_main() {
-    let client = create_client(IP.to_string(), PORT.to_string()).await;
+    let client = create_client(flags::IP.to_string(), flags::PORT.to_string()).await;
     let handle = ip_service::ip_common::monitor_ip(client.clone()).await;
     let _ = tokio::join!(handle);
 }

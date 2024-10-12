@@ -8,5 +8,6 @@ service-protos = { path = "../service-protos" }
 ip-service = { path = "../ip-service" }
 tokio = { workspace = true, features = ["full"] }
 tonic = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
 
 [build-dependencies]
