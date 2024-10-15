@@ -122,6 +122,7 @@ pub async fn monitor_ip(client: Arc<Mutex<Client>>) -> JoinHandle<std::io::Resul
             let net_devices = get_net_info().await?;
             let mut c = client.lock().await;
             if c.client.is_none() {
+                println!("client connect to the server failed");
                 if let Err(_e) = c.re_connect().await {
                     tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
                     continue;

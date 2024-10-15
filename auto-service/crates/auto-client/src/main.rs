@@ -1,7 +1,8 @@
+use clap::{CommandFactory, Parser};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use ip_service::ip_client::Client;
+use ip_service::{ip_client::Client, ip_common::get_net_info};
 
 mod flags;
 
@@ -22,7 +23,47 @@ async fn create_client(server_ip: String, port: String) -> Arc<Mutex<Client>> {
 }
 
 async fn async_main() {
+    let parse_flags = flags::Flags::parse();
     let client = create_client(flags::IP.to_string(), flags::PORT.to_string()).await;
-    let handle = ip_service::ip_common::monitor_ip(client.clone()).await;
-    let _ = tokio::join!(handle);
+    match parse_flags.command {
+        Some(flags::Commands::IpService { command }) => match command {
+            Some(flags::IpServiceCommand::AddRemote {}) => {
+                if let Err(e) = client
+                    .lock()
+                    .await
+                    .add_remote(get_net_info().await.expect("get net info error"))
+                    .await
+                {
+                    println!("add remote returns error: {:?}", e);
+                }
+            }
+            Some(flags::IpServiceCommand::List {}) => match client.lock().await.list().await {
+                Ok(response) => {
+                    println!("list result = {:?}", response);
+                }
+                Err(e) => {
+                    println!("list returns error: {:?}", e);
+                    panic!("list error!");
+                }
+            },
+            Some(flags::IpServiceCommand::MonitorIp {}) => {
+                let client = create_client(flags::IP.to_string(), flags::PORT.to_string()).await;
+                let handle = ip_service::ip_common::monitor_ip(client.clone()).await;
+                let _ = tokio::join!(handle);
+            }
+            None => {
+                let mut cmd = flags::Flags::command();
+                for s in cmd.get_subcommands_mut() {
+                    if s.get_name() == "ip_service" {
+                        s.print_help().expect("print ip_service help failed");
+                    }
+                }
+            }
+        },
+        None => {
+            if let Err(e) = flags::Flags::command().print_help() {
+                println!("print_help failed {:?}", e);
+            };
+        }
+    }
 }
