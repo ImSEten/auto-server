@@ -1,6 +1,6 @@
 ﻿/.vs
-/auto-server-old/auto-server/__pycache__
-/auto-server-old/auto-server/build/auto_server
-/auto-server-old/auto-server/dist
+/auto-wechat/auto-server/__pycache__
+/auto-wechat/auto-server/build/auto_server
+/auto-wechat/auto-server/dist
 /auto-service/target
 /auto-service/Cargo.lock
